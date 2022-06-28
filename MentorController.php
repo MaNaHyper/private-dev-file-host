@@ -158,15 +158,15 @@ class MentorController extends Controller
     {
     
         //Getting moodle_data from moodle_id
-        $mentor_id = $request->mentor->id;
-        $mentor_moodle_id = $request->mentor->moodle_id;
+        //$mentor_id = $request->mentor->id;
+        //$mentor_moodle_id = $request->mentor->moodle_id;
 
-        $mentor_moodle_data = DB::connection('moodle')->table('mdl_user')->where('id', [$mentor_moodle_id])->first();
+        //$mentor_moodle_data = DB::connection('moodle')->table('mdl_user')->where('id', [$mentor_moodle_id])->first();
 
-        if(!$mentor_moodle_data) {
-            $response = ["isSaved" => false, "message" => "Mentor not found"];
-            return response($response, 404);
-        }
+        // if(!$mentor_moodle_data) {
+        //     $response = ["isSaved" => false, "message" => "Mentor not found"];
+        //     return response($response, 404);
+        // }
 
         //$mentor_data = $request->mentor;
         
@@ -176,15 +176,17 @@ class MentorController extends Controller
         //$mentor_data->name=$mentor_moodle_data->firstname . ' ' . $mentor_moodle_data->lastname;
 
         //Updating the mentor record. 
-        $mentor = Mentor::find($mentor_id)->first();
-        $mentor->email = $mentor_moodle_data->email;
-        $mentor->name = $mentor_moodle_data->firstname . ' ' . $mentor_moodle_data->lastname;
+        //$mentor = Mentor::find($mentor_id)->first();
+        //$mentor->email = $mentor_moodle_data->email;
+        //$mentor->name = $mentor_moodle_data->firstname . ' ' . $mentor_moodle_data->lastname;
         
-        if(!$mentor->save()){
-            $response = ["isSaved" => false, "message" => "Error occurd while saving data."];
-            return response($response, 500);
-        }
-        
+        //if(!$mentor->save()){
+            //$response = ["isSaved" => false, "message" => "Error occurd while saving data."];
+            //return response($response, 500);
+        //}
+
+        $mentor = $request->mentor;
+
         //Returning data to client
         $unserialize_out = unserialize_out($mentor, ['sectors', 'preferred_languages', 'expertise']);
         $response = ["isVerified" => true, "isFound" => true, "data" => $unserialize_out];
