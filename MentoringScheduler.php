@@ -248,12 +248,15 @@ class MentoringScheduler
             $times = $this->calculateTimeSlots($temp_date['startDateTime'], $temp_date['endDateTime'], '1 Hour', $mentoring_sessions);
 
             //Check if all time slots are taken
-            // $all_taken = true;
-            // foreach($times as $time) {
-            //     if($time['availability'] == false) {
-            //         $all_taken = false;
-            //     }
-            // }
+            $all_taken = true;
+            foreach($times as $time) {
+                if($time['availability'] == 1) {
+                    $all_taken = false;
+                }
+            }
+
+            if($all_taken == false) {
+
                 if(in_array($temp_date['date'], array_column($time_slots, 'date'))) {
                     $key = array_search($temp_date['date'], array_column($time_slots, 'date'));
 
@@ -265,21 +268,13 @@ class MentoringScheduler
                     ];
                 }
 
+            }
+
             
         }
 
-        //Remove date if its within 24 hours or less than 24 hours
-        $time_slots = array_filter($time_slots, function($time_slot) {
-            $date = new DateTime($time_slot['date']);
-            $now = new DateTime();
-            $diff = $date->diff($now);
-            $diff = $diff->format('%R%a');
-            if($diff > 1) {
-                return true;
-            } else {
-                return false;
-            }
-        });
+        //Remove dates with no available time slots
+
 
         //Order by date
         usort($time_slots, function($a, $b) {
@@ -316,6 +311,16 @@ class MentoringScheduler
 
             if(in_array($time, $mentoring_times) ) {
                 $reason = 'Already booked by another mentor';
+                $availability = 0;
+            }
+
+            $tommorrow = Carbon::now()->addDay();
+            $_startTime = Carbon::parse($time);
+            //Calculate time difference in hours
+            $diff = $tommorrow->diffInHours($_startTime);
+
+            if($diff < 24) {
+                $reason = 'Booking must be at least 24 hours in advance';
                 $availability = 0;
             }
 
