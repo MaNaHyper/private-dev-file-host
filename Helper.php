@@ -181,6 +181,8 @@ function mdl_getUserData($id, $extra_data = false) {
     if($extra_data) {
         $extra_user_data = mdl_getUserExtraData($id);
         $userdata->extra_data['user_dist'] = $extra_user_data['user_dist'];
+	    $userdata->extra_data['business_type'] = $extra_user_data['business_type'];    
+        $userdata->extra_data['user_gender'] = $extra_user_data['user_gender'];
     }
     
     $userdata->mentor = is_mentor($id);
@@ -189,7 +191,7 @@ function mdl_getUserData($id, $extra_data = false) {
 
     unset($userdata->password);
     unset($userdata->secret);
-    unset($userdata->email);
+    //unset($userdata->email);
     unset($userdata->address);
     unset($userdata->auth);
     unset($userdata->confirmed);
